@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BhavAI - Expression Detection</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* CSS to center the Predict button */
+        #predict-btn {
+            display: block;
+            margin: 20px auto;
+        }
+
+        #uploaded-image {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <ul>
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#plans">Plans</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</nav>
+
+<!-- Hero Section -->
+<section id="hero">
+    <div>
+        <h1>Welcome to BhavAI</h1>
+        <p>Your AI-powered Expression Detection</p>
+        
+        <!-- Upload Section -->
+        <button id="upload-btn">Upload Image</button>
+        <p id="file-name"></p>
+        
+        <!-- Display uploaded image -->
+        <img id="uploaded-image" src="" alt="Uploaded Image" style="display: none;">
+        
+        <form action="/predict" method="POST" enctype="multipart/form-data" id="upload-form">
+            <input type="file" name="file" id="file" accept="image/*" style="display: none;" required>
+        </form>
+        <button id="predict-btn" style="display: none;">Predict</button>
+        <p id="prediction-result"></p>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about">
+    <h2>About BhavAI</h2>
+    <p>BhavAI is an AI-driven platform designed to detect and analyze human expressions from images. Our goal is to make emotional recognition more accessible and impactful in various industries.</p>
+</section>
+
+<!-- Services Section -->
+<section id="services">
+    <h2>What We Offer</h2>
+    <div class="service">
+        <h3>Expression Detection</h3>
+        <p>Detect emotions from images with high accuracy.</p>
+    </div>
+    <div class="service">
+        <h3>Real-Time Analysis</h3>
+        <p>Get real-time feedback on facial expressions and emotions.</p>
+    </div>
+    <div class="service">
+        <h3>AI Integration</h3>
+        <p>Integrate with existing platforms for seamless emotion recognition.</p>
+    </div>
+</section>
+
+<!-- Subscription Plans Section -->
+<section id="plans">
+    <h2>Our Subscription Plans</h2>
+    <div class="plan">
+        <h3>Basic</h3>
+        <p>$10/month</p>
+        <button>Subscribe Now</button>
+    </div>
+    <div class="plan">
+        <h3>Premium</h3>
+        <p>$25/month</p>
+        <button>Subscribe Now</button>
+    </div>
+    <div class="plan">
+        <h3>Enterprise</h3>
+        <p>Custom Pricing</p>
+        <button>Contact Us</button>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials">
+    <h2>What Our Users Say</h2>
+    <div class="testimonial">
+        <p>"BhavAI transformed the way we analyze emotions in customer feedback!"</p>
+    </div>
+    <div class="testimonial">
+        <p>"The accuracy and speed of BhavAI are incredible."</p>
+    </div>
+</section>
+
+<!-- Contact Us Section -->
+<section id="contact">
+    <h2>Contact Us</h2>
+    <form action="#">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Your Email" required>
+        <textarea name="message" placeholder="Your Message" required></textarea>
+        <button type="submit">Send Message</button>
+    </form>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2024 BhavAI. All Rights Reserved.</p>
+</footer>
+
+<script>
+    const uploadBtn = document.getElementById('upload-btn');
+    const fileInput = document.getElementById('file');
+    const fileNameDisplay = document.getElementById('file-name');
+    const predictBtn = document.getElementById('predict-btn');
+    const predictionResult = document.getElementById('prediction-result');
+    const uploadedImage = document.getElementById('uploaded-image');
+
+    // Trigger file selection
+    uploadBtn.addEventListener('click', () => fileInput.click());
+
+    // Handle file input change
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (file) {
+            fileNameDisplay.textContent = Image uploaded: ${file.name};
+            uploadedImage.style.display = 'block'; // Show uploaded image
+            uploadedImage.src = URL.createObjectURL(file); // Display the image
+            predictBtn.style.display = 'block'; // Show predict button
+        }
+    });
+
+    // Handle prediction button click
+    predictBtn.addEventListener('click', async () => {
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000//predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                predictionResult.textContent = Prediction: ${data.prediction};
+            } else {
+                const errorData = await response.json();
+                predictionResult.textContent = Error: ${errorData.error};
+            }
+        } catch (error) {
+            predictionResult.textContent = Error: ${error.message};
+        }
+    });
+</script>
+
+</body>
+</html>
